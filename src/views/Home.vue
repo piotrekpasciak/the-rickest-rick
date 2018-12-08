@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div v-infinite-scroll="getAdditionalEpisodesHandler" infinite-scroll-disabled="isInfiniteScrollDisabled" infinite-scroll-distance="10">
     <h1 class="episodes__title">Episodes</h1>
 
     <div class="episodes__search">
       <SearchIcon />
-      <input @input="debounceSearchOnInput($event.target.value)" type="text" placeholder="Search">
+      <input v-model="currentQuery" @input="debounceSearchOnInput()" type="text" placeholder="Search">
     </div>
 
     <ul class="episodes__list">
@@ -12,12 +12,11 @@
         <GenericEpisodeItem
           v-bind:name="episode.name"
           v-bind:episode="episode.episode"
-          v-bind:airDate="episode.air_date"
         />
       </li>
     </ul>
 
-    <div class="episodes__loader">
+    <div v-if="isLoading" class="episodes__loader">
       Loading more
     </div>
   </div>
@@ -36,19 +35,40 @@ export default {
   },
   data() {
     return {
-      episodes: []
+      episodes: [],
+      currentQuery: '',
+      currentPage: 1,
+      maxPages: 0,
+      isLoading: false
+    }
+  },
+  computed: {
+    isInfiniteScrollDisabled() {
+      return this.isLoading || this.currentPage >= this.maxPages
     }
   },
   methods: {
-    getEpisodesHandler(page = 1, query = '') {
-      getEpisodes(page, query).then(success => {
+    getEpisodesHandler() {
+      this.currentPage = 1
+      this.isLoading = true
+      getEpisodes(this.currentPage, this.currentQuery).then(success => {
         this.episodes = success.data.results
+        this.maxPages = success.data.info.pages
       }, failure => {
         this.episodes = []
       })
+      this.isLoading = false
     },
-    debounceSearchOnInput: debounce(function(query) {
-      this.getEpisodesHandler(1, query)
+    getAdditionalEpisodesHandler: function() {
+      this.isLoading = true
+      this.currentPage += 1
+      getEpisodes(this.currentPage, this.currentQuery).then(success => {
+        this.episodes = this.episodes.concat(success.data.results)
+      })
+      this.isLoading = false
+    },
+    debounceSearchOnInput: debounce(function() {
+      this.getEpisodesHandler()
     }, 200)
   },
   created: function() {
