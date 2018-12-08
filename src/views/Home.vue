@@ -3,8 +3,8 @@
     <h1 class="episodes__title">Episodes</h1>
 
     <div class="episodes__search">
-      <!-- search icon -->
-      <input type="text" placeholder="Search">
+      <SearchIcon />
+      <input @input="debounceSearchOnInput($event.target.value)" type="text" placeholder="Search">
     </div>
 
     <ul class="episodes__list">
@@ -15,7 +15,6 @@
           v-bind:airDate="episode.air_date"
         />
       </li>
-      <!-- ... -->
     </ul>
 
     <div class="episodes__loader">
@@ -25,11 +24,14 @@
 </template>
 
 <script>
+import debounce from 'lodash.debounce'
+import SearchIcon from '../assets/icon-search.svg'
 import GenericEpisodeItem from '../components/GenericEpisodeItem'
 import getEpisodes from '../modules/Episode'
 
 export default {
   components: {
+    SearchIcon,
     GenericEpisodeItem
   },
   data() {
@@ -38,14 +40,19 @@ export default {
     }
   },
   methods: {
-
+    getEpisodesHandler(page = 1, query = '') {
+      getEpisodes(page, query).then(success => {
+        this.episodes = success.data.results
+      }, failure => {
+        this.episodes = []
+      })
+    },
+    debounceSearchOnInput: debounce(function(query) {
+      this.getEpisodesHandler(1, query)
+    }, 200)
   },
   created: function() {
-    getEpisodes().then(success => {
-      this.episodes = success.data.results
-    }, failure => {
-      this.episodes = []
-    })
+    this.getEpisodesHandler()
   }
 }
 </script>
