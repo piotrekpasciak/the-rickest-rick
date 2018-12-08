@@ -3,8 +3,7 @@
     <h3 class="episode-item__num">Episode {{ getEpisodeNumber }}</h3>
     <h2 class="episode-item__name">{{ name }}</h2>
     <span class="episode-item__season-badge">Season {{ getSeasonNumber }}</span>
-    <!-- optional info -->
-    <div v-if="false" class="episode-info">
+    <div v-if="withEpisodeInfo" class="episode-info">
       <span class="episode-info__label">Air date</span>
       <span class="episode-info__value">{{ airDate }}</span>
     </div>
@@ -15,6 +14,10 @@
   export default {
     props: {
       airDate: String,
+      withEpisodeInfo: {
+        type: Boolean,
+        default: false
+      },
       name: {
         type: String,
         required: true
