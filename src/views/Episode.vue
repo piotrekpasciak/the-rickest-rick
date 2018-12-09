@@ -49,7 +49,7 @@
 
 <script>
 import ArrowIcon from '../assets/icon-arrow-left.svg'
-import GenericEpisodeItem from '../components/GenericEpisodeItem'
+import GenericEpisodeItem from '../components/GenericEpisodeItem/GenericEpisodeItem'
 import GenericCharacterItem from '../components/GenericCharacterItem'
 import TheComments from '../components/TheComments'
 import { getEpisode } from '../modules/Episode'

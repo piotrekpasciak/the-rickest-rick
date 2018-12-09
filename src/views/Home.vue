@@ -44,7 +44,7 @@
 <script>
 import debounce from 'lodash.debounce'
 import SearchIcon from '../assets/icon-search.svg'
-import GenericEpisodeItem from '../components/GenericEpisodeItem'
+import GenericEpisodeItem from '../components/GenericEpisodeItem/GenericEpisodeItem'
 import { getEpisodes } from '../modules/Episode'
 
 export default {
