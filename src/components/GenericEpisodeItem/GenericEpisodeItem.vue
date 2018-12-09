@@ -1,11 +1,24 @@
 <template>
   <div class="episode-item">
-    <h3 class="episode-item__num">Episode {{ getEpisodeNumber }}</h3>
-    <h2 class="episode-item__name">{{ name }}</h2>
-    <span class="episode-item__season-badge">Season {{ getSeasonNumber }}</span>
-    <div v-if="withEpisodeInfo" class="episode-info">
-      <span class="episode-info__label">Air date</span>
-      <span class="episode-info__value">{{ airDate }}</span>
+    <h3 class="episode-item__num">
+      Episode {{ getEpisodeNumber }}
+    </h3>
+    <h2 class="episode-item__name">
+      {{ name }}
+    </h2>
+    <span class="episode-item__season-badge">
+      Season {{ getSeasonNumber }}
+    </span>
+    <div
+      v-if="withEpisodeInfo"
+      class="episode-info"
+    >
+      <span class="episode-info__label">
+        Air date
+      </span>
+      <span class="episode-info__value">
+        {{ airDate }}
+      </span>
     </div>
   </div>
 </template>
