@@ -17,7 +17,8 @@ export default new Router({
     {
       path: '/episode/:id',
       name: 'episode',
-      component: Episode
+      component: Episode,
+      props: true
     }
   ]
 })

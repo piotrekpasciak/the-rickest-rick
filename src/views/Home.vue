@@ -1,24 +1,41 @@
 <template>
-  <div v-infinite-scroll="getAdditionalEpisodesHandler" infinite-scroll-disabled="isInfiniteScrollDisabled" infinite-scroll-distance="10">
-    <h1 class="episodes__title">Episodes</h1>
+  <div
+    v-infinite-scroll="getAdditionalEpisodesHandler"
+    infinite-scroll-disabled="isInfiniteScrollDisabled"
+    infinite-scroll-distance="10"
+  >
+    <h1 class="episodes__title">
+      Episodes
+    </h1>
 
     <div class="episodes__search">
       <SearchIcon />
-      <input v-model="currentQuery" @input="debounceSearchOnInput()" type="text" placeholder="Search">
+      <input
+        v-model="currentQuery"
+        type="text"
+        placeholder="Search"
+        @input="debounceSearchOnInput()"
+      >
     </div>
 
     <ul class="episodes__list">
-      <li v-for="episode in episodes" v-bind:key="episode.id">
-        <router-link :to="{ name: 'episode', params: { id: episode.id} }">
+      <li
+        v-for="episode in episodes"
+        :key="episode.id"
+      >
+        <RouterLink :to="{ name: 'episode', params: { id: episode.id } }">
           <GenericEpisodeItem
-            v-bind:name="episode.name"
-            v-bind:episode="episode.episode"
+            :name="episode.name"
+            :episode="episode.episode"
           />
-        </router-link>
+        </RouterLink>
       </li>
     </ul>
 
-    <div v-if="isLoading" class="episodes__loader">
+    <div
+      v-if="isLoading"
+      class="episodes__loader"
+    >
       Loading more
     </div>
   </div>
@@ -28,7 +45,7 @@
 import debounce from 'lodash.debounce'
 import SearchIcon from '../assets/icon-search.svg'
 import GenericEpisodeItem from '../components/GenericEpisodeItem'
-import getEpisodes from '../modules/Episode'
+import { getEpisodes } from '../modules/Episode'
 
 export default {
   components: {
