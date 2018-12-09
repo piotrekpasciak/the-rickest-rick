@@ -4,7 +4,7 @@
 
     <div class="episodes__search">
       <SearchIcon />
-      <input v-model="currentQuery" @input="debounceSearchOnInput()" type="text" placeholder="Search">
+      <input v-model="currentQuery" @input="debounceSearchOnInput" type="text" placeholder="Search">
     </div>
 
     <ul class="episodes__list">
