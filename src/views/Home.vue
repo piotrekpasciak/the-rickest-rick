@@ -9,10 +9,12 @@
 
     <ul class="episodes__list">
       <li v-for="episode in episodes" v-bind:key="episode.id">
-        <GenericEpisodeItem
-          v-bind:name="episode.name"
-          v-bind:episode="episode.episode"
-        />
+        <router-link :to="{ name: 'episode', params: { id: episode.id} }">
+          <GenericEpisodeItem
+            v-bind:name="episode.name"
+            v-bind:episode="episode.episode"
+          />
+        </router-link>
       </li>
     </ul>
 
