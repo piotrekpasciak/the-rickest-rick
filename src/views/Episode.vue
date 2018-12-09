@@ -19,7 +19,14 @@
         <h2>Characters</h2>
 
         <div class="characters-list">
-            <!-- Character Items -->
+          <div v-for="character in episodeCharacters" :key="character.id">
+            <GenericCharacterItem
+              :name="character.name"
+              :imageSrc="character.image"
+              :species="character.species"
+              :originLocation="character.origin.name"
+            />
+          </div>
 
           <div class="link-container">
             <button class="primary-link is-big">
@@ -40,16 +47,19 @@
 <script>
 import ArrowIcon from '../assets/icon-arrow-left.svg'
 import GenericEpisodeItem from '../components/GenericEpisodeItem'
+import GenericCharacterItem from '../components/GenericCharacterItem'
 import { getEpisode } from '../modules/Episode'
+import { getMultipleCharacters } from '../modules/Character'
 
 export default {
   components: {
     ArrowIcon,
-    GenericEpisodeItem
+    GenericEpisodeItem,
+    GenericCharacterItem
   },
   props: {
     id: {
-      type: String,
+      type: [Number, String],
       required: true
     }
   },
@@ -58,20 +68,38 @@ export default {
       name: '',
       episode: '',
       airDate: '',
-      withEpisodeInfo: true
+      withEpisodeInfo: true,
+      charactersLinks: [],
+      episodeCharacters: []
+    }
+  },
+  computed: {
+    getCharactersIds() {
+      return this.charactersLinks.map(characterLink => {
+        const lastSlashIndex = characterLink.lastIndexOf('/') + 1
+        return characterLink.substring(lastSlashIndex)
+      })
     }
   },
   methods: {
     getEpisodeHandler() {
-      getEpisode(this.id).then(success => {
+      return getEpisode(this.id).then(success => {
         this.name = success.data.name
         this.episode = success.data.episode
         this.airDate = success.data.air_date
+        this.charactersLinks = success.data.characters
+      })
+    },
+    getCharactersHandler() {
+      getMultipleCharacters(this.getCharactersIds.join(',')).then(success => {
+        this.episodeCharacters = success.data
       })
     }
   },
   created: function() {
-    this.getEpisodeHandler()
+    this.getEpisodeHandler().then(() => {
+      this.getCharactersHandler()
+    })
   }
 }
 </script>
