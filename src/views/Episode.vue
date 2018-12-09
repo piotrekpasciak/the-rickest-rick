@@ -38,7 +38,10 @@
 
       <div class="episode__right-col">
         <h2>Comments</h2>
-        <!-- Comments -->
+        <TheComments
+          @submitCommentEvent="submitCommentEvent"
+          :comments="episodeComments"
+        />
       </div>
     </div>
   </div>
@@ -48,14 +51,17 @@
 import ArrowIcon from '../assets/icon-arrow-left.svg'
 import GenericEpisodeItem from '../components/GenericEpisodeItem'
 import GenericCharacterItem from '../components/GenericCharacterItem'
+import TheComments from '../components/TheComments'
 import { getEpisode } from '../modules/Episode'
 import { getMultipleCharacters } from '../modules/Character'
+import { getComments, postComment } from '../modules/Comment'
 
 export default {
   components: {
     ArrowIcon,
     GenericEpisodeItem,
-    GenericCharacterItem
+    GenericCharacterItem,
+    TheComments
   },
   props: {
     id: {
@@ -70,7 +76,8 @@ export default {
       airDate: '',
       withEpisodeInfo: true,
       charactersLinks: [],
-      episodeCharacters: []
+      episodeCharacters: [],
+      episodeComments: []
     }
   },
   computed: {
@@ -94,12 +101,27 @@ export default {
       getMultipleCharacters(this.getCharactersIds.join(',')).then(success => {
         this.episodeCharacters = success.data
       })
+    },
+    getCommentsHandler() {
+      getComments(this.id).then(success => {
+        this.episodeComments = success.data.results
+      })
+    },
+    submitCommentEvent({ author, content }) {
+      postComment(this.id, { author, content }).then(success => {
+        this.episodeComments.shift(success.data)
+        // debugger
+        // this.episodeComments.push(success.data)
+
+      })
+      // console.log("Submit button clicked", comment, userName)
     }
   },
   created: function() {
     this.getEpisodeHandler().then(() => {
       this.getCharactersHandler()
     })
+    this.getCommentsHandler()
   }
 }
 </script>
